@@ -134,6 +134,6 @@ def ask():
 
     
 if __name__ == '__main__':
-    port = int(os.environ.get("PORT", 4000))  # Render provides PORT, default to 4000 locally
-    app.run(host='0.0.0.0', port=port, debug=True)
+    # port = int(os.environ.get("PORT", 4000))  # Render provides PORT, default to 4000 locally
+    app.run(host='0.0.0.0', port=10000, debug=True)
 
