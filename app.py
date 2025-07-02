@@ -8,6 +8,7 @@ from langchain_pinecone import PineconeVectorStore
 from langchain_huggingface import HuggingFaceEmbeddings
 from langchain_core.messages import HumanMessage,AIMessage,SystemMessage
 from dotenv import load_dotenv
+import os
 
 
 # Load .env variables
@@ -105,7 +106,7 @@ chat_history = [
 
 
 app = Flask(__name__)
-CORS(app, resources={r"/ask": {"origins": "http://127.0.0.1:5000"}})
+CORS(app, resources={r"/ask": {"origins": "0.0.0.0:5000"}})
 
 @app.route('/')
 def index():
@@ -132,7 +133,7 @@ def ask():
         return jsonify({"response": result.content})
 
     
-
 if __name__ == '__main__':
-    app.run(host='0.0.0.0',debug=True,port=4000)
+    port = int(os.environ.get("PORT", 4000))  # Render provides PORT, default to 4000 locally
+    app.run(host='0.0.0.0', port=port, debug=True)
 
