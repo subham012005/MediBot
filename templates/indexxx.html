@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>MediBot</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', sans-serif;
+        }
+
+        body {
+            height: 100vh;
+            background: #1e0033;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-start;
+            position: relative;
+            color: #fff;
+            overflow: hidden;
+        }
+
+        /* Red medical cross in center */
+        /* Keyframes for breathing effect */
+        @keyframes breathe {
+            0% {
+                transform: translate(-50%, -50%) scale(1);
+                opacity: 0.3;
+                box-shadow: 0 0 8px rgba(255, 0, 0, 0.3);
+            }
+
+            50% {
+                transform: translate(-50%, -50%) scale(1.15);
+                opacity: 0.8;
+                box-shadow: 0 0 35px rgba(255, 0, 0, 0.9);
+            }
+
+            100% {
+                transform: translate(-50%, -50%) scale(1);
+                opacity: 0.3;
+                box-shadow: 0 0 8px rgba(255, 0, 0, 0.3);
+            }
+        }
+
+        body::before,
+        body::after {
+            content: '';
+            position: absolute;
+            background: rgba(255, 0, 0, 0.5);
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            z-index: 0;
+            border-radius: 4px;
+            animation: breathe 3s infinite ease-in-out;
+        }
+
+        /* Vertical part of the cross */
+        body::before {
+            width: 30px;
+            height: 100px;
+        }
+
+        /* Horizontal part of the cross */
+        body::after {
+            width: 100px;
+            height: 30px;
+        }
+
+
+
+        .header {
+            font-size: 32px;
+            font-weight: bold;
+            margin: 30px 0;
+            z-index: 1;
+        }
+
+        .chat-box {
+            flex: 1;
+            width: 100%;
+            max-width: 600px;
+            padding: 20px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            z-index: 1;
+        }
+
+        .message-container {
+            display: flex;
+            align-items: flex-end;
+            gap: 10px;
+        }
+
+        .message {
+            padding: 12px 16px;
+            border-radius: 20px;
+            max-width: 70%;
+            line-height: 1.4;
+        }
+
+        .user-container {
+            flex-direction: row-reverse;
+            align-self: flex-end;
+        }
+
+        .user {
+            background-color: #4e00ff;
+            color: white;
+        }
+
+        .bot {
+            background-color: #333;
+        }
+
+        .avatar {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background-size: cover;
+            background-position: center;
+        }
+
+        .avatar.user {
+            background-image: url('data:image/svg+xml;base64,PHN2ZyBmaWxsPSIjZmZmIiB2aWV3Qm94PSIwIDAgMjQgMjQiIHdpZHRoPSI0OCIgIGhlaWdodD0iNDgiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PHBhdGggZD0iTTEyIDEyYy0yLjIxIDAtNC0xLjc5LTQtNHMxLjc5LTQgNC00IDQgMS43OSA0IDQtMS43OSA0LTQgNHptMC0xMmE0IDQgMCAxIDAgMCA4IDQgNCAwIDAgMCAwLTh6bTAgMTVjLTUuMzMgMC0xNiAzLjA4LTE2IDh2MmgzMnYtMmMwLTQuOTItMTAuNjctOC0xNi04eiIvPjwvc3ZnPg==');
+        }
+
+        .avatar.bot {
+            background-image: url('data:image/svg+xml;base64,PHN2ZyBmaWxsPSIjY2NjIiB2aWV3Qm94PSIwIDAgMjQgMjQiIHdpZHRoPSI0OCIgIGhlaWdodD0iNDgiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PHBhdGggZD0iTTEyIDFhMSAxIDAgMCAxIDAgMmMxLjY5IDAgMy4zMi40NSA0LjY3IDEuMzFsMS4xMi0xLjEyIDEuNDEgMS40MS0xLjExIDEuMTJDMTguNTUgNS4xOCAxOSAzLjU2IDE5IDJhNyA3IDAgMCAwLTctNyA3IDcgMCAwIDAgMC4wMSAxM2MwIDEuNjEgMS4zOSA0IDIgNGguMDFhMSAxIDAgMCAxIDAgMnYyaDJ2LTJoMnYyaDJ2LThoMXYzYzAgMS4xMS0uODkgMi0yIDJIM2MtMS4xMSAwLTIgLjg5LTIgMnYyaDF2MmgyVjE4aDJ2MmgyVjE4aDF2LThoMXpNOC43NSAxMS4yNGEuNzUuNzUgMCAxIDEgMCAxLjUgLjc1Ljc1IDAgMCAxIDAtMS41em04LjUgMGEuNzUuNzUgMCAxIDEgMCAxLjUgLjc1Ljc1IDAgMCAxIDAtMS41eiIvPjwvc3ZnPg==');
+        }
+
+        .input-area {
+            width: 100%;
+            max-width: 600px;
+            padding: 15px;
+            position: relative;
+            z-index: 1;
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            align-items: center;
+            margin-bottom: 40px;
+        }
+
+        .input-area input {
+            flex: 1;
+            padding: 12px 18px;
+            font-size: 16px;
+            border-radius: 25px;
+            border: 2px solid transparent;
+            outline: none;
+            background: #2c003e;
+            color: #fff;
+            transition: border 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .input-area input:focus {
+            border: 2px solid #fff;
+            box-shadow: 0 0 10px rgb(255, 0, 255),
+                0 0 20px rgb(0, 255, 255),
+                0 0 30px rgb(255, 255, 0);
+        }
+
+        .input-area button {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 25px;
+            background-color: #8000ff;
+            color: white;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background 0.3s ease;
+        }
+
+        .input-area button:hover {
+            background-color: #a64dff;
+        }
+
+        .typing {
+            font-style: italic;
+            color: #aaa;
+            font-size: 14px;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            padding-left: 46px;
+        }
+
+        .dot {
+            height: 6px;
+            width: 6px;
+            background-color: #aaa;
+            border-radius: 50%;
+            animation: blink 1.2s infinite;
+        }
+
+        .dot:nth-child(2) {
+            animation-delay: 0.2s;
+        }
+
+        .dot:nth-child(3) {
+            animation-delay: 0.4s;
+        }
+
+        @keyframes blink {
+
+            0%,
+            80%,
+            100% {
+                opacity: 0.2;
+            }
+
+            40% {
+                opacity: 1;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="header">MediBot</div>
+
+    <div class="chat-box" id="chatBox">
+        <div class="message-container">
+            <div class="avatar bot"></div>
+            <div class="message bot">Hello! Tell me what symptoms you're experiencing.</div>
+        </div>
+    </div>
+
+    <div class="input-area">
+        <input type="text" id="userInput" placeholder="Describe your symptoms...">
+        <button onclick="sendMessage()">Submit</button>
+    </div>
+
+    <script>
+        const chatBox = document.getElementById("chatBox");
+        const userInput = document.getElementById("userInput");
+s
+        function appendMessage(text, sender) {
+            const container = document.createElement("div");
+            container.className = `message-container ${sender}-container`;
+
+            const avatar = document.createElement("div");
+            avatar.className = `avatar ${sender}`;
+
+            const msg = document.createElement("div");
+            msg.className = `message ${sender}`;
+            msg.textContent = text;
+
+            container.appendChild(avatar);
+            container.appendChild(msg);
+            chatBox.appendChild(container);
+            chatBox.scrollTop = chatBox.scrollHeight;
+        }
+
+        function showTyping() {
+            const typing = document.createElement("div");
+            typing.className = "message-container";
+            typing.id = "typingIndicator";
+
+            typing.innerHTML = `
+        <div class="avatar bot"></div>
+        <div class="typing"><span class="dot"></span><span class="dot"></span><span class="dot"></span></div>
+      `;
+            chatBox.appendChild(typing);
+            chatBox.scrollTop = chatBox.scrollHeight;
+        }
+
+        function hideTyping() {
+            const typing = document.getElementById("typingIndicator");
+            if (typing) typing.remove();
+        }
+
+        // function sendMessage() {
+        //     const text = userInput.value.trim();
+        //     if (!text) return;
+
+        //     appendMessage(text, "user");
+        //     userInput.value = "";
+        //     showTyping();
+
+        //     setTimeout(() => {
+        //         hideTyping();
+        //         appendMessage("Based on your symptoms, you may have a cold or flu. Consider rest and fluids.", "bot");
+        //     }, 2000);
+        // }
+
+
+
+        async function sendMessage() {
+            const inputField = document.getElementById("userInput");
+            const message = inputField.value.trim();
+            if (!message) return;
+
+            appendMessage(message, "user");
+            inputField.value = "";
+            showTyping();
+            console.log(JSON.stringify({ message: message }))
+            try {
+                const response = await fetch("http://localhost:5000/ask", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify({ message: message })
+                });
+
+                const data = await response.json();
+                hideTyping();
+                appendMessage(data.response, "bot");
+            } catch (error) {
+                hideTyping();
+                appendMessage("Sorry, something went wrong.", "bot");
+                console.error(error);
+            }
+        }
+
+
+
+
+        userInput.addEventListener("keydown", function (e) {
+            if (e.key === "Enter") {
+                e.preventDefault();
+                sendMessage();
+            }
+        });
+    </script>
+</body>
+
+</html>
