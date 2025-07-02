@@ -109,7 +109,7 @@ CORS(app, resources={r"/ask": {"origins": "http://127.0.0.1:5000"}})
 
 @app.route('/')
 def index():
-    return render_template('indexxx.html')
+    return render_template('index.html')
 
 @app.route("/ask", methods=["POST"])
 def ask():
