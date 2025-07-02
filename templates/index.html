@@ -242,7 +242,7 @@
     <script>
         const chatBox = document.getElementById("chatBox");
         const userInput = document.getElementById("userInput");
-s
+        
         function appendMessage(text, sender) {
             const container = document.createElement("div");
             container.className = `message-container ${sender}-container`;
@@ -278,22 +278,6 @@ s
             if (typing) typing.remove();
         }
 
-        // function sendMessage() {
-        //     const text = userInput.value.trim();
-        //     if (!text) return;
-
-        //     appendMessage(text, "user");
-        //     userInput.value = "";
-        //     showTyping();
-
-        //     setTimeout(() => {
-        //         hideTyping();
-        //         appendMessage("Based on your symptoms, you may have a cold or flu. Consider rest and fluids.", "bot");
-        //     }, 2000);
-        // }
-
-
-
         async function sendMessage() {
             const inputField = document.getElementById("userInput");
             const message = inputField.value.trim();
@@ -321,9 +305,6 @@ s
                 console.error(error);
             }
         }
-
-
-
 
         userInput.addEventListener("keydown", function (e) {
             if (e.key === "Enter") {
