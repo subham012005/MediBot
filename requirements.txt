@@ -1,0 +1,9 @@
+flask
+flask-cors
+python-dotenv
+langchain
+langchain-google-genai
+langchain-pinecone
+langchain-huggingface
+sentence-transformers
+pinecone-client
