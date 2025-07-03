@@ -106,6 +106,7 @@ chat_history = [
 
 
 app = Flask(__name__)
+port = int(os.environ.get("PORT", 4000))
 CORS(app, resources={r"/ask": {"origins": "*"}})
 
 @app.route('/')
@@ -133,6 +134,6 @@ def ask():
         return jsonify({"response": result.content})
 
     
-if __name__ == '__main__':
-    app.run(debug=True)
+if __name__ == "__main__":
+    app.run(host="0.0.0.0", port=port,debug=True)
 
