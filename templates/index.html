@@ -129,12 +129,12 @@
         }
 
          .avatar.user {
-            background-image: url('/assests/ai.png');
+            background-image: url('/static/ai.png');
             background-size: 50px 50px;
         }
 
         .avatar.bot {
-            background-image: url('/assests/doc.png');
+            background-image: url('/static/doc.png');
         }
 
         .input-area {
@@ -289,7 +289,7 @@
             showTyping();
             console.log(JSON.stringify({ message: message }))
             try {
-                const response = await fetch("http://localhost:5000/ask", {
+                const response = await fetch("/ask", {
                     method: "POST",
                     headers: {
                         "Content-Type": "application/json"
