@@ -106,8 +106,6 @@ chat_history = [
 
 
 app = Flask(__name__)
-port = int(os.environ.get("PORT", 4000))
-CORS(app, resources={r"/ask": {"origins": "*"}})
 
 @app.route('/')
 def index():
@@ -135,5 +133,5 @@ def ask():
 
     
 if __name__ == "__main__":
-    app.run(host="0.0.0.0", port=port,debug=True)
+    app.run(host="0.0.0.0", port=5000,debug=True)
 
